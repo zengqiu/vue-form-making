@@ -299,6 +299,9 @@
         </el-form-item>
       </template>
 
+      <el-form-item :label="$t('fm.config.widget.customClass')" v-if="Object.keys(data.options).indexOf('customClass')>=0">
+        <el-input v-model="data.options.customClass"></el-input>
+      </el-form-item>
 
       <template v-if="data.type != 'grid'">
         <el-form-item :label="$t('fm.config.widget.attribute')">
@@ -310,9 +313,6 @@
           <el-checkbox v-model="data.options.isDelete" v-if="Object.keys(data.options).indexOf('isDelete')>=0">{{$t('fm.config.widget.isDelete')}}</el-checkbox>
           <el-checkbox v-model="data.options.isEdit" v-if="Object.keys(data.options).indexOf('isEdit')>=0">{{$t('fm.config.widget.isEdit')}}</el-checkbox>
 
-        </el-form-item>
-        <el-form-item :label="$t('fm.config.widget.customClass')" v-if="Object.keys(data.options).indexOf('customClass')>=0">
-          <el-input v-model="data.options.customClass"></el-input>
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.validate')">
           <div v-if="Object.keys(data.options).indexOf('required')>=0">
