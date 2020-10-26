@@ -1,5 +1,5 @@
 <template>
-  <div class="fm-uplaod-container"
+  <div class="fm-upload-container"
     :id="uploadId"
   >
     <draggable class="drag-img-list"
@@ -7,7 +7,7 @@
       v-bind="{group: uploadId, ghostClass: 'ghost', animation: 200}"
       :no-transition-on-drag="true"
     >
-      <div 
+      <div
         :id="item.key"
         :style="{width: width+'px', height: height+'px'}"
         :class="{uploading: item.status=='uploading', 'is-success': item.status=='success', 'is-diabled': disabled}"
@@ -20,7 +20,7 @@
           <i class="el-icon-upload-success el-icon-check"></i>
         </label>
 
-        <div class="uplaod-action" :style="{height: miniWidth / 4 + 'px'}" v-if="!disabled">
+        <div class="upload-action" :style="{height: miniWidth / 4 + 'px'}" v-if="!disabled">
           <i class="iconfont icon-tupianyulan" :title="$t('fm.upload.preview')" @click="handlePreviewFile(item.key)" :style="{'font-size': miniWidth/8+'px'}"></i>
           <i v-if="isEdit" class="iconfont icon-sync1" :title="$t('fm.upload.edit')" @click="handleEdit(item.key)" :style="{'font-size': miniWidth/8+'px'}"></i>
           <i v-if="isDelete && fileList.length > min" class="iconfont icon-delete" :title="$t('fm.upload.delete')" @click="handleRemove(item.key)" :style="{'font-size': miniWidth/8+'px'}"></i>
@@ -140,7 +140,7 @@ export default {
     handleChange () {
       console.log(this.$refs.uploadInput.files)
       const files = this.$refs.uploadInput.files
-      
+
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
         const reader = new FileReader()
@@ -168,20 +168,20 @@ export default {
 
           this.$nextTick(() => {
             if (this.isQiniu) {
-              this.uplaodAction2(reader.result, file, key)
+              this.uploadAction2(reader.result, file, key)
             } else {
-              this.uplaodAction(reader.result, file, key)
+              this.uploadAction(reader.result, file, key)
             }
           })
         }
       }
       this.$refs.uploadInput.value = []
-    }, 
-    uplaodAction (res, file, key) {
+    },
+    uploadAction (res, file, key) {
       let changeIndex = this.fileList.findIndex(item => item.key === key)
       console.log(this.fileList.findIndex(item => item.key === key))
       const xhr = new XMLHttpRequest()
-      
+
       const url = this.action
       xhr.open('POST', url, true)
       // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
@@ -193,7 +193,7 @@ export default {
       xhr.onreadystatechange = () => {
         console.log(xhr)
         if (xhr.readyState === 4) {
-          
+
           let resData = JSON.parse(xhr.response)
           if (resData && resData.url) {
             this.$set(this.fileList, this.fileList.findIndex(item => item.key === key), {
@@ -224,7 +224,7 @@ export default {
         }
       }
     },
-    uplaodAction2 (res, file, key) {
+    uploadAction2 (res, file, key) {
       const _this = this
       const observable = qiniu.upload(file, key, this.token, {
         fname: key,
@@ -236,7 +236,7 @@ export default {
       observable.subscribe({
         next (res) {
           _this.$set(_this.fileList[_this.fileList.findIndex(item => item.key === key)], 'percent', parseInt(res.total.percent))
-          
+
         },
         error (err) {
           _this.$set(_this.fileList, _this.fileList.findIndex(item => item.key === key), {
@@ -265,9 +265,9 @@ export default {
       this.fileList.splice(this.fileList.findIndex(item => item.key === key), 1)
     },
     handleEdit (key) {
-      
+
       this.editIndex = this.fileList.findIndex(item => item.key === key)
-      
+
       this.$refs.uploadInput.click()
     },
     handleMeitu (key) {
@@ -283,7 +283,7 @@ export default {
     handlePreviewFile (key) {
       this.viewer && this.viewer.destroy()
       this.uploadId = 'upload_' + new Date().getTime()
-      
+
       console.log(this.viewer)
       this.$nextTick(() => {
         this.viewer = new Viewer(document.getElementById(this.uploadId))
@@ -303,7 +303,7 @@ export default {
 </script>
 
 <style lang="scss">
-.fm-uplaod-container{
+.fm-upload-container{
   .is-disabled{
     position: relative;
 
@@ -334,11 +334,11 @@ export default {
     position: relative;
     vertical-align: top;
     &:hover{
-      .uplaod-action{
+      .upload-action{
         display: flex;
       }
     }
-    .uplaod-action{
+    .upload-action{
       position: absolute;
       // top: 0;
       // height: 30px;
