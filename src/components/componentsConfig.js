@@ -10,6 +10,7 @@ export const basicComponents = [
       pattern: '',
       placeholder: '',
       disabled: false,
+      customClass: '',
     }
   },
   {

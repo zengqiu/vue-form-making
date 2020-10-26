@@ -20,6 +20,10 @@
           <el-radio-button label="mini">mini</el-radio-button>
         </el-radio-group>
       </el-form-item>
+
+      <el-form-item :label="$t('fm.config.form.customClass')">
+        <el-input v-model="data.customClass"></el-input>
+      </el-form-item>
     </el-form>
   </div>
 </template>
