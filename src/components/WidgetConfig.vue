@@ -41,29 +41,20 @@
       <el-form-item :label="$t('fm.config.widget.step')" v-if="Object.keys(data.options).indexOf('step')>=0">
         <el-input-number v-model="data.options.step" :min="0" :max="100" :step="1"></el-input-number>
       </el-form-item>
-      <el-form-item :label="$t('fm.config.widget.multiple')" v-if="data.type=='select' || data.type=='imgupload'">
-        <el-switch v-model="data.options.multiple" @change="handleSelectMuliple"></el-switch>
+      <el-form-item :label="$t('fm.config.widget.multiple')" v-if="['select', 'imgupload', 'fileupload'].includes(data.type)">
+        <el-switch v-model="data.options.multiple" @change="handleSelectMultiple"></el-switch>
       </el-form-item>
       <el-form-item :label="$t('fm.config.widget.filterable')" v-if="data.type=='select'">
         <el-switch v-model="data.options.filterable"></el-switch>
       </el-form-item>
       <el-form-item :label="$t('fm.config.widget.allowHalf')" v-if="Object.keys(data.options).indexOf('allowHalf')>=0">
-        <el-switch
-            v-model="data.options.allowHalf"
-          >
-          </el-switch>
+        <el-switch v-model="data.options.allowHalf"></el-switch>
       </el-form-item>
       <el-form-item :label="$t('fm.config.widget.showAlpha')" v-if="Object.keys(data.options).indexOf('showAlpha')>=0">
-        <el-switch
-            v-model="data.options.showAlpha"
-          >
-          </el-switch>
+        <el-switch v-model="data.options.showAlpha"></el-switch>
       </el-form-item>
       <el-form-item :label="$t('fm.config.widget.showLabel')" v-if="Object.keys(data.options).indexOf('showLabel')>=0">
-        <el-switch
-            v-model="data.options.showLabel"
-          >
-        </el-switch>
+        <el-switch v-model="data.options.showLabel"></el-switch>
       </el-form-item>
       <el-form-item :label="$t('fm.config.widget.option')" v-if="Object.keys(data.options).indexOf('options')>=0">
         <el-radio-group v-model="data.options.remote" size="mini" style="margin-bottom:10px;">
@@ -88,44 +79,36 @@
             <el-radio-group v-model="data.options.defaultValue">
               <draggable tag="ul" :list="data.options.options"
                 v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
-                handle=".drag-item"
-              >
+                handle=".drag-item">
                 <li v-for="(item, index) in data.options.options" :key="index" >
                   <el-radio
                     :label="item.value"
-                    style="margin-right: 5px;"
-                  >
+                    style="margin-right: 5px;">
                     <el-input :style="{'width': data.options.showLabel? '90px': '180px' }" size="mini" v-model="item.value"></el-input>
                     <el-input style="width:90px;" size="mini" v-if="data.options.showLabel" v-model="item.label"></el-input>
                     <!-- <input v-model="item.value"/> -->
                   </el-radio>
                   <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i class="iconfont icon-icon_bars"></i></i>
                   <el-button @click="handleOptionsRemove(index)" circle plain type="danger" size="mini" icon="el-icon-minus" style="padding: 4px;margin-left: 5px;"></el-button>
-
                 </li>
               </draggable>
-
             </el-radio-group>
           </template>
 
           <template v-if="data.type=='checkbox' || (data.type=='select' && data.options.multiple)">
             <el-checkbox-group v-model="data.options.defaultValue">
-
               <draggable tag="ul" :list="data.options.options"
                 v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
-                handle=".drag-item"
-              >
+                handle=".drag-item">
                 <li v-for="(item, index) in data.options.options" :key="index" >
                   <el-checkbox
                     :label="item.value"
-                    style="margin-right: 5px;"
-                  >
+                    style="margin-right: 5px;">
                     <el-input :style="{'width': data.options.showLabel? '90px': '180px' }" size="mini" v-model="item.value"></el-input>
                     <el-input style="width:90px;" size="mini" v-if="data.options.showLabel" v-model="item.label"></el-input>
                   </el-checkbox>
                   <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i class="iconfont icon-icon_bars"></i></i>
                   <el-button @click="handleOptionsRemove(index)" circle plain type="danger" size="mini" icon="el-icon-minus" style="padding: 4px;margin-left: 5px;"></el-button>
-
                 </li>
               </draggable>
             </el-checkbox-group>
@@ -162,8 +145,8 @@
         <el-color-picker
           v-if="data.type == 'color'"
           v-model="data.options.defaultValue"
-          :show-alpha="data.options.showAlpha"
-        ></el-color-picker>
+          :show-alpha="data.options.showAlpha">
+        </el-color-picker>
         <el-switch v-if="data.type=='switch'" v-model="data.options.defaultValue"></el-switch>
         <el-input v-if="data.type=='text'" v-model="data.options.defaultValue"></el-input>
       </el-form-item>
@@ -182,16 +165,11 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.isRange')" v-if="data.type == 'time'">
-          <el-switch
-            v-model="data.options.isRange"
-          >
+          <el-switch v-model="data.options.isRange">
           </el-switch>
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.isTimestamp')" v-if="data.type == 'date'">
-          <el-switch
-            v-model="data.options.timestamp"
-          >
-          </el-switch>
+          <el-switch v-model="data.options.timestamp"></el-switch>
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.placeholder')" v-if="(!data.options.isRange && data.type == 'time') || (data.type != 'time' && data.options.type != 'datetimerange' && data.options.type != 'daterange')">
           <el-input v-model="data.options.placeholder"></el-input>
@@ -212,8 +190,7 @@
             v-if="!data.options.isRange"
             v-model="data.options.defaultValue"
             :arrowControl="data.options.arrowControl"
-            :value-format="data.options.format"
-          >
+            :value-format="data.options.format">
           </el-time-picker>
           <el-time-picker
             key="2"
@@ -222,33 +199,36 @@
             v-model="data.options.defaultValue"
             is-range
             :arrowControl="data.options.arrowControl"
-            :value-format="data.options.format"
-          >
+            :value-format="data.options.format">
           </el-time-picker>
         </el-form-item>
       </template>
 
-      <template v-if="data.type=='imgupload'">
+      <template v-if="['imgupload', 'fileupload'].includes(data.type)">
 
+        <el-form-item v-if="Object.keys(data.options).indexOf('tip')>=0" :label="$t('fm.config.widget.tip')">
+          <el-input v-model="data.options.tip" />
+        </el-form-item>
         <el-form-item :label="$t('fm.config.widget.limit')">
-          <el-input type="number" v-model.number="data.options.length"></el-input>
+          <el-input type="number" v-model.number="data.options.limit"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('fm.config.widget.isQiniu')">
-          <el-switch v-model="data.options.isQiniu"></el-switch>
+        <el-form-item :label="$t('fm.config.widget.action')" :required="true">
+          <el-input v-model="data.options.action"></el-input>
         </el-form-item>
-        <template v-if="data.options.isQiniu">
-          <el-form-item label="Domain" :required="true">
-          <el-input v-model="data.options.domain"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('fm.config.widget.tokenFunc')" :required="true">
-            <el-input v-model="data.options.tokenFunc"></el-input>
-          </el-form-item>
-        </template>
-        <template v-else>
-          <el-form-item :label="$t('fm.config.widget.imageAction')" :required="true">
-            <el-input v-model="data.options.action"></el-input>
-          </el-form-item>
-        </template>
+        <el-form-item :label="$t('fm.config.widget.headers')">
+          <el-row v-for="(header, index) in headers" :key="index" style="margin-bottom: 5px">
+            <el-col :span="10">
+              <el-input v-model="header.key" type="textarea" :rows="1" placeholder="KEY" />
+            </el-col>
+            <el-col :span="10" style="float: left; margin-left: 10px">
+              <el-input v-model="header.value" type="textarea" :rows="1" placeholder="VALUE" />
+            </el-col>
+            <el-col :span="2">
+              <el-button type="danger" icon="el-icon-delete" plain circle style="padding: 4px; margin-left: 5px;" @click="handleHeadersRemove(index)" />
+            </el-col>
+          </el-row>
+          <el-button type="text" style="font-size: 12px; color: #1890ff" @click="handleAddHeader">添加</el-button>
+        </el-form-item>
       </template>
 
       <template v-if="data.type=='blank'">
@@ -268,14 +248,11 @@
         <el-form-item :label="$t('fm.config.widget.columnOption')">
           <draggable tag="ul" :list="data.columns"
             v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
-            handle=".drag-item"
-          >
+            handle=".drag-item">
             <li v-for="(item, index) in data.columns" :key="index" >
               <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i class="iconfont icon-icon_bars"></i></i>
               <el-input :placeholder="$t('fm.config.widget.span')" size="mini" style="width: 100px;" type="number" v-model.number="item.span"></el-input>
-
               <el-button @click="handleOptionsRemove(index)" circle plain type="danger" size="mini" icon="el-icon-minus" style="padding: 4px;margin-left: 5px;"></el-button>
-
             </li>
           </draggable>
           <div style="margin-left: 22px;">
@@ -313,7 +290,6 @@
           <el-checkbox v-model="data.options.arrowControl" v-if="Object.keys(data.options).indexOf('arrowControl')>=0">{{$t('fm.config.widget.arrowControl')}}</el-checkbox>
           <el-checkbox v-model="data.options.isDelete" v-if="Object.keys(data.options).indexOf('isDelete')>=0">{{$t('fm.config.widget.isDelete')}}</el-checkbox>
           <el-checkbox v-model="data.options.isEdit" v-if="Object.keys(data.options).indexOf('isEdit')>=0">{{$t('fm.config.widget.isEdit')}}</el-checkbox>
-
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.validate')">
           <div v-if="Object.keys(data.options).indexOf('required')>=0">
@@ -355,7 +331,8 @@ export default {
         pattern: null,
         range: null,
         length: null
-      }
+      },
+      headers: []
     }
   },
   computed: {
@@ -373,7 +350,6 @@ export default {
       } else {
         this.data.options.options.splice(index, 1)
       }
-
     },
     handleAddOption () {
       if (this.data.options.showLabel) {
@@ -386,7 +362,6 @@ export default {
           value: this.$t('fm.config.widget.newOption')
         })
       }
-
     },
     handleAddColumn () {
       this.data.columns.push({
@@ -402,21 +377,23 @@ export default {
         }
       })
     },
-    handleSelectMuliple (value) {
+    handleSelectMultiple (value) {
       if (value) {
-        if (this.data.options.defaultValue) {
-          this.data.options.defaultValue = [this.data.options.defaultValue]
-        } else {
-          this.data.options.defaultValue = []
+        if (!Array.isArray(this.data.options.defaultValue)) {
+          this.data.options.defaultValue = this.data.options.defaultValue ? [this.data.options.defaultValue] : []
         }
-
       } else {
-        if (this.data.options.defaultValue.length>0){
-          this.data.options.defaultValue = this.data.options.defaultValue[0]
+        if (Array.isArray(this.data.options.defaultValue)) {
+          if (['fileupload', 'imgupload'].includes(this.data.type)) {
+            this.data.options.defaultValue = this.data.options.defaultValue.slice(0, 1)
+          } else {
+            this.data.options.defaultValue = this.data.options.defaultValue.pop()
+          }
         } else {
-          this.data.options.defaultValue = ''
+          if (['fileupload', 'imgupload'].includes(this.data.type)) {
+            this.data.options.defaultValue = this.data.options.defaultValue ? [this.data.options.defaultValue] : []
+          }
         }
-
       }
     },
 
@@ -457,7 +434,17 @@ export default {
       }
 
       this.generateRule()
-    }
+    },
+
+    handleAddHeader() {
+      this.headers.push({
+        key: '',
+        value: ''
+      })
+    },
+    handleHeadersRemove(index) {
+      this.headers.splice(index, 1)
+    },
   },
   watch: {
     'data.options.isRange': function(val) {
@@ -485,7 +472,32 @@ export default {
         this.validateDataType(this.data.options.dataType)
         this.valiatePattern(this.data.options.pattern)
       }
-    }
+    },
+    'data.options.headers': {
+      handler (newVal, oldVal) {
+        if (!oldVal && newVal && this.headers.length === 0) {
+          for (let key in newVal) {
+            this.headers.push({key: key, value: newVal[key]})
+          }
+        }
+      },
+      immediate: true
+    },
+    headers: {
+      handler (val) {
+        if (this.data.options) {
+          if (this.headers.length > 0) {
+            this.data.options.headers = {}
+            for (let header of val) {
+              if (header.key && header.value) this.data.options.headers[header.key] = header.value
+            }
+          } else {
+            this.data.options.headers = {}
+          }
+        }
+      },
+      deep: true
+    },
   }
 }
 </script>

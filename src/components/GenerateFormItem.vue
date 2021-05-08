@@ -158,24 +158,34 @@
       ></el-slider>
     </template>
 
+    <template v-if="widget.type=='fileupload'">
+      <file-upload
+        v-model="dataModel"
+        :action="widget.options.action"
+        :limit="widget.options.limit"
+        :headers="widget.options.headers"
+        :disabled="widget.options.disabled"
+        :multiple="widget.options.multiple"
+        :tip="widget.options.tip"
+      >
+      </file-upload>
+    </template>
+
     <template v-if="widget.type=='imgupload'">
-      <fm-upload
+      <img-upload
         v-model="dataModel"
         :disabled="widget.options.disabled"
         :style="{'width': widget.options.width}"
         :width="widget.options.size.width"
         :height="widget.options.size.height"
-        :token="widget.options.token"
-        :domain="widget.options.domain"
         :multiple="widget.options.multiple"
-        :length="widget.options.length"
-        :is-qiniu="widget.options.isQiniu"
+        :limit="widget.options.limit"
         :is-delete="widget.options.isDelete"
         :min="widget.options.min"
         :is-edit="widget.options.isEdit"
         :action="widget.options.action"
       >
-      </fm-upload>
+      </img-upload>
     </template>
 
     <template v-if="widget.type == 'editor'">
@@ -206,12 +216,14 @@
 </template>
 
 <script>
-import FmUpload from './Upload'
+import FileUpload from './Upload/File'
+import ImgUpload from './Upload/Image'
 
 export default {
   props: ['widget', 'models', 'rules', 'remote'],
   components: {
-    FmUpload
+    FileUpload,
+    ImgUpload,
   },
   data () {
     return {
@@ -228,12 +240,6 @@ export default {
             children: item[this.widget.options.props.children]
           }
         })
-      })
-    }
-
-    if (this.widget.type === 'imgupload' && this.widget.options.isQiniu) {
-      this.remote[this.widget.options.tokenFunc]((data) => {
-        this.widget.options.token = data
       })
     }
   },

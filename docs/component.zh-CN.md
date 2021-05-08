@@ -14,7 +14,7 @@
 | clearable | 设计器清空按钮显示 | Boolean | false |  |
 | upload | 设计器导入JSON按钮显示 | Boolean | false | |
 | basic-fields | 设计器左侧基础字段配置| Array | ['input', 'textarea', 'number', 'radio', 'checkbox', 'time', 'date', 'rate', 'color', 'select', 'switch', 'slider', 'text'] |  |
-| advance-fields | 设计器左侧高级字段配置 | Array | ['blank', 'imgupload', 'editor', 'cascader'] | |
+| advance-fields | 设计器左侧高级字段配置 | Array | ['blank', 'fileupload', 'imgupload', 'editor', 'cascader'] | |
 | layout-fields | 设计器左侧布局字段配置 | Array | ['grid'] | |
 
 

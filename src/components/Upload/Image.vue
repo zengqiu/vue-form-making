@@ -30,7 +30,7 @@
 
     <div class="el-upload el-upload--picture-card"
       :class="{'is-disabled': disabled}"
-      v-show="(!isQiniu || (isQiniu && token)) && fileList.length < length"
+      v-show="fileList.length < limit"
       :style="{width: width+'px', height: height+'px'}"
       @click.self="handleAdd"
     >
@@ -44,9 +44,9 @@
 <script>
 import Viewer from 'viewerjs'
 import Draggable from 'vuedraggable'
-import * as qiniu from 'qiniu-js'
 require('viewerjs/dist/viewer.css')
 export default {
+  name: 'ImgUpload',
   components: {
     Draggable
   },
@@ -75,13 +75,9 @@ export default {
       type: Boolean,
       default: false
     },
-    length: {
+    limit: {
       type: Number,
-      default: 9
-    },
-    isQiniu: {
-      type: Boolean,
-      default: false
+      default: 1
     },
     isDelete: {
       type: Boolean,
@@ -134,6 +130,10 @@ export default {
     }
   },
   mounted () {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaa')
+    console.log(this.value)
+    console.log(this.fileList)
+
     this.$emit('input', this.fileList)
   },
   methods: {
@@ -167,11 +167,7 @@ export default {
           }
 
           this.$nextTick(() => {
-            if (this.isQiniu) {
-              this.uploadAction2(reader.result, file, key)
-            } else {
-              this.uploadAction(reader.result, file, key)
-            }
+            this.uploadAction(reader.result, file, key)
           })
         }
       }
@@ -223,43 +219,6 @@ export default {
           this.$set(this.fileList[this.fileList.findIndex(item => item.key === key)], 'percent', res.loaded/res.total*100)
         }
       }
-    },
-    uploadAction2 (res, file, key) {
-      const _this = this
-      const observable = qiniu.upload(file, key, this.token, {
-        fname: key,
-        mimeType: []
-      }, {
-        useCdnDomain: true,
-        region: qiniu.region.z2
-      })
-      observable.subscribe({
-        next (res) {
-          _this.$set(_this.fileList[_this.fileList.findIndex(item => item.key === key)], 'percent', parseInt(res.total.percent))
-
-        },
-        error (err) {
-          _this.$set(_this.fileList, _this.fileList.findIndex(item => item.key === key), {
-            ..._this.fileList[_this.fileList.findIndex(item => item.key === key)],
-            status: 'error'
-          })
-          _this.fileList.splice(_this.fileList.findIndex(item => item.key === key), 1)
-        },
-        complete (res) {
-          _this.$set(_this.fileList, _this.fileList.findIndex(item => item.key === key), {
-            ..._this.fileList[_this.fileList.findIndex(item => item.key === key)],
-            url: _this.domain + res.key,
-            percent: 100
-          })
-          setTimeout(() => {
-            _this.$set(_this.fileList, _this.fileList.findIndex(item => item.key === key), {
-              ..._this.fileList[_this.fileList.findIndex(item => item.key === key)],
-              status: 'success'
-            })
-            _this.$emit('input', _this.fileList)
-          }, 200)
-        }
-      })
     },
     handleRemove (key) {
       this.fileList.splice(this.fileList.findIndex(item => item.key === key), 1)

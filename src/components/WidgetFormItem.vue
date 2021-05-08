@@ -145,18 +145,28 @@
           ></el-slider>
         </template>
 
+      <template v-if="element.type=='fileupload'">
+        <file-upload
+          v-model="element.options.defaultValue"
+          :disabled="element.options.disabled"
+          :style="{'width': element.options.width}"
+          :limit="element.options.limit"
+          :multiple="element.options.multiple"
+          :tip="element.options.tip"
+        >
+        </file-upload>
+      </template>
+
         <template v-if="element.type=='imgupload'">
-          <fm-upload
+          <img-upload
             v-model="element.options.defaultValue"
             :disabled="element.options.disabled"
             :style="{'width': element.options.width}"
             :width="element.options.size.width"
             :height="element.options.size.height"
-            token="xxx"
-            domain="xxx"
           >
 
-          </fm-upload>
+          </img-upload>
         </template>
 
         <template v-if="element.type == 'cascader'">
@@ -201,11 +211,14 @@
 </template>
 
 <script>
-import FmUpload from './Upload'
+import FileUpload from './Upload/File'
+import ImgUpload from './Upload/Image'
+
 export default {
   props: ['element', 'select', 'index', 'data'],
   components: {
-    FmUpload,
+    FileUpload,
+    ImgUpload,
   },
   data () {
     return {

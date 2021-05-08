@@ -11,8 +11,7 @@
                   v-bind="{group:{ name:'people', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
                   @end="handleMoveEnd"
                   @start="handleMoveStart"
-                  :move="handleMove"
-                >
+                  :move="handleMove">
                   <template v-for="(item, index) in basicComponents">
                     <li v-if="basicFields.indexOf(item.type)>=0" class="form-edit-widget-label" :class="{'no-put': item.type == 'divider'}" :key="index">
                       <a>
@@ -20,9 +19,9 @@
                         <span>{{item.name}}</span>
                       </a>
                     </li>
-                  </template>                
+                  </template>
                 </draggable>
-              </template>            
+              </template>
 
               <template v-if="advanceFields.length">
                 <div class="widget-cate">{{$t('fm.components.advance.title')}}</div>
@@ -30,15 +29,14 @@
                   v-bind="{group:{ name:'people', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
                   @end="handleMoveEnd"
                   @start="handleMoveStart"
-                  :move="handleMove"
-                >
+                  :move="handleMove">
                   <template v-for="(item, index) in advanceComponents">
                     <li v-if="advanceFields.indexOf(item.type) >= 0" class="form-edit-widget-label" :class="{'no-put': item.type == 'table'}" :key="index">
                       <a>
                         <i class="icon iconfont" :class="item.icon"></i>
                         <span>{{item.name}}</span>
                       </a>
-                    </li>                  
+                    </li>
                   </template>
                 </draggable>
               </template>
@@ -50,8 +48,7 @@
                   v-bind="{group:{ name:'people', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
                   @end="handleMoveEnd"
                   @start="handleMoveStart"
-                  :move="handleMove"
-                >
+                  :move="handleMove">
                   <template v-for="(item, index) in layoutComponents">
                     <li v-if="layoutFields.indexOf(item.type) >=0" class="form-edit-widget-label no-put" :key="index">
                       <a>
@@ -59,10 +56,9 @@
                         <span>{{item.name}}</span>
                       </a>
                     </li>
-                  </template>               
+                  </template>
                 </draggable>
               </template>
-
             </div>
 
           </el-aside>
@@ -103,7 +99,7 @@
             width="1000px"
             form
           >
-            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm" :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
+            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm" :value="widgetModels" :remote="remote" ref="generateForm">
 
               <template v-slot:blank="scope">
                 Width <el-input v-model="scope.model.blank.width" style="width: 100px"></el-input>
@@ -134,8 +130,7 @@
             @on-close="jsonVisible = false"
             ref="jsonPreview"
             width="800px"
-            form
-          >
+            form>
 
             <div id="jsoneditor" style="height: 400px;width: 100%;">{{jsonTemplate}}</div>
 
@@ -150,8 +145,7 @@
             ref="codePreview"
             width="800px"
             form
-            :action="false"
-          >
+            :action="false">
             <!-- <div id="codeeditor" style="height: 500px; width: 100%;">{{htmlTemplate}}</div> -->
             <el-tabs type="border-card" style="box-shadow: none;" v-model="codeActiveName">
               <el-tab-pane label="Vue Component" name="vue">
@@ -164,7 +158,7 @@
           </cus-dialog>
         </el-container>
       </el-main>
-      <el-footer height="30px" style="font-weight: 600;">Powered by <a target="_blank" href="https://github.com/GavinZhuLei/vue-form-making">vue-form-making</a></el-footer>
+      <el-footer height="30px" style="font-weight: 600;">Powered by <a target="_blank" href="https://github.com/zengqiu/vue-form-making">vue-form-making</a></el-footer>
     </el-container>
   </div>
 </template>
@@ -178,9 +172,10 @@ import CusDialog from './CusDialog'
 import GenerateForm from './GenerateForm'
 import Clipboard from 'clipboard'
 import {basicComponents, layoutComponents, advanceComponents} from './componentsConfig.js'
-import {loadJs, loadCss} from '../util/index.js'
-import request from '../util/request.js'
 import generateCode from './generateCode.js'
+import ace from 'ace-builds'
+import 'ace-builds/webpack-resolver'
+
 
 export default {
   name: 'fm-making-form',
@@ -219,12 +214,16 @@ export default {
     },
     advanceFields: {
       type: Array,
-      default: () => ['blank', 'imgupload', 'editor', 'cascader']
+      default: () => ['blank', 'fileupload', 'imgupload', 'editor', 'cascader']
     },
     layoutFields: {
       type: Array,
       default: () => ['grid']
-    }
+    },
+    remote: {
+      type: Object,
+      default: () => {}
+    },
   },
   data () {
     return {
@@ -238,7 +237,8 @@ export default {
           labelWidth: 100,
           labelPosition: 'right',
           size: 'small',
-          customClass: ''
+          customClass: '',
+          name: ''
         },
       },
       configTab: 'widget',
@@ -247,27 +247,6 @@ export default {
       jsonVisible: false,
       codeVisible: false,
       uploadVisible: false,
-      remoteFuncs: {
-        func_test (resolve) {
-          setTimeout(() => {
-            const options = [
-              {id: '1', name: '1111'},
-              {id: '2', name: '2222'},
-              {id: '3', name: '3333'}
-            ]
-
-            resolve(options)
-          }, 2000)
-        },
-        funcGetToken (resolve) {
-          request.get('http://tools-server.xiaoyaoji.cn/api/uptoken').then(res => {
-            resolve(res.uptoken)
-          })
-        },
-        upload_callback (response, file, fileList) {
-          console.log('callback', response, file, fileList)
-        }
-      },
       widgetModels: {},
       blank: '',
       htmlTemplate: '',
@@ -395,7 +374,8 @@ export default {
           labelWidth: 100,
           labelPosition: 'right',
           size: 'small',
-          customClass: ''
+          customClass: '',
+          name: ''
         },
       }
 

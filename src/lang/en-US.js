@@ -73,7 +73,8 @@ export default {
         },
         labelWidth: 'Label Width',
         size: 'Size',
-        customClass: 'Custom Class'
+        customClass: 'Custom Class',
+        name: 'Name'
       },
       widget: {
         title: 'Component Attribute',
@@ -116,9 +117,6 @@ export default {
         endPlaceholder: 'Placeholder of end time',
         format: 'Format',
         limit: 'Maximum Upload Count',
-        isQiniu: 'Upload with Qiniu Cloud',
-        tokenFunc: 'A funchtin to get Qiniu Uptoken',
-        imageAction: 'Picture upload address',
         tip: 'Text Prompt',
         action: 'Upload Address',
         defaultType: 'Data Type',
@@ -173,7 +171,8 @@ export default {
         tab: 'Tab',
         validatorRequired: 'Required',
         validatorType: 'Invaild format',
-        validatorPattern: 'Unmatched pattern'
+        validatorPattern: 'Unmatched pattern',
+        headers: 'Set upload request headers',
       }
     },
     upload: {

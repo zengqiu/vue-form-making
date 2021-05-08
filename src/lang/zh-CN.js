@@ -73,7 +73,8 @@ export default {
         },
         labelWidth: '表单标签宽度',
         size: '组件尺寸',
-        customClass: '自定义Class'
+        customClass: '自定义Class',
+        name: '名称'
       },
       widget: {
         title: '字段属性',
@@ -116,9 +117,6 @@ export default {
         endPlaceholder: '结束时间占位内容',
         format: '格式',
         limit: '最大上传数',
-        isQiniu: '使用七牛上传',
-        tokenFunc: '获取七牛Token方法',
-        imageAction: '图片上传地址',
         tip: '提示说明文字',
         action: '上传地址',
         defaultType: '绑定数据类型',
@@ -173,7 +171,8 @@ export default {
         tab: '标签页',
         validatorRequired: '必须填写',
         validatorType: '格式不正确',
-        validatorPattern: '格式不匹配'
+        validatorPattern: '格式不匹配',
+        headers: '设置上传的请求头部',
       }
     },
     upload: {

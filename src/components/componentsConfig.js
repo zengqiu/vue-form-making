@@ -248,6 +248,22 @@ export const advanceComponents = [
     }
   },
   {
+    type: 'fileupload',
+    icon: 'icon-wenjianshangchuan',
+    options: {
+      defaultValue: [],
+      action: '',
+      limit: 1,
+      headers: {},
+      disabled: false,
+      width: '',
+      multiple: false,
+      tip: '',
+      required: false,
+      customClass: ''
+    }
+  },
+  {
     type: 'imgupload',
     icon: 'icon-tupian',
     options: {
@@ -257,17 +273,13 @@ export const advanceComponents = [
         height: 100,
       },
       width: '',
-      tokenFunc: 'funcGetToken',
-      token: '',
-      domain: 'http://pfp81ptt6.bkt.clouddn.com/',
       disabled: false,
-      length: 8,
+      limit: 1,
       multiple: false,
-      isQiniu: false,
       isDelete: false,
       min: 0,
       isEdit: false,
-      action: 'https://jsonplaceholder.typicode.com/photos/',
+      action: '',
       customClass: ''
     }
   },

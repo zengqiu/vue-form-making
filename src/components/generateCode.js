@@ -1,8 +1,8 @@
-function findRemoteFunc (list, funcList, tokenFuncList, blankList) {
+function findRemoteFunc (list, funcList, blankList) {
   for (let i = 0; i < list.length; i++) {
     if (list[i].type == 'grid') {
       list[i].columns.forEach(item => {
-        findRemoteFunc(item.list, funcList, tokenFuncList, blankList)
+        findRemoteFunc(item.list, funcList, blankList)
       })
     } else {
       if (list[i].type == 'blank') {
@@ -10,14 +10,6 @@ function findRemoteFunc (list, funcList, tokenFuncList, blankList) {
           blankList.push({
             name: list[i].model,
             label: list[i].name
-          })
-        }
-      } else if (list[i].type == 'imgupload') {
-        if (list[i].options.tokenFunc) {
-          tokenFuncList.push({
-            func: list[i].options.tokenFunc,
-            label: list[i].name,
-            model: list[i].model
           })
         }
       } else {
@@ -34,14 +26,10 @@ function findRemoteFunc (list, funcList, tokenFuncList, blankList) {
 }
 
 export default function (data, type = 'vue') {
-
   const funcList = []
-
-  const tokenFuncList = []
-
   const blankList = []
 
-  findRemoteFunc(JSON.parse(data).list, funcList, tokenFuncList, blankList)
+  findRemoteFunc(JSON.parse(data).list, funcList, blankList)
 
   let funcTemplate = ''
 
@@ -53,16 +41,6 @@ export default function (data, type = 'vue') {
               // ${funcList[i].label} ${funcList[i].model}
               // Call callback function once get the data from remote server
               // resolve(data)
-            },
-    `
-  }
-
-  for(let i = 0; i < tokenFuncList.length; i++) {
-    funcTemplate += `
-            ${tokenFuncList[i].func} (resolve) {
-              // ${tokenFuncList[i].label} ${tokenFuncList[i].model}
-              // Call callback function once get the token
-              // resolve(token)
             },
     `
   }

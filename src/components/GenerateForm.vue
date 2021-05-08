@@ -13,12 +13,9 @@
             type="flex"
             :gutter="item.options.gutter ? item.options.gutter : 0"
             :justify="item.options.justify"
-            :align="item.options.align"
-          >
+            :align="item.options.align">
             <el-col v-for="(col, colIndex) in item.columns" :key="colIndex" :span="col.span">
-
-
-              <template v-for="citem in col.list" >
+              <template v-for="citem in col.list">
                 <el-form-item v-if="citem.type=='blank'" :label="citem.name" :prop="citem.model" :key="citem.key">
                   <slot :name="citem.model" :model="models"></slot>
                 </el-form-item>
@@ -42,29 +39,27 @@
         </template>
 
         <template v-else>
-          <genetate-form-item
+          <generate-form-item
             :key="item.key"
             :models.sync="models"
             :rules="rules"
             :widget="item"
             @input-change="onInputChange"
             :remote="remote">
-          </genetate-form-item>
+          </generate-form-item>
         </template>
-
       </template>
     </el-form>
   </div>
 </template>
 
 <script>
-import GenetateFormItem from './GenerateFormItem'
-import {loadJs} from '../util/index.js'
+import GenerateFormItem from './GenerateFormItem'
 
 export default {
   name: 'fm-generate-form',
   components: {
-    GenetateFormItem
+    GenerateFormItem
   },
   props: ['data', 'remote', 'value', 'insite'],
   data () {
@@ -74,16 +69,16 @@ export default {
     }
   },
   created () {
-    this.generateModle(this.data.list)
+    this.generateModel(this.data.list)
   },
   mounted () {
   },
   methods: {
-    generateModle (genList) {
+    generateModel (genList) {
       for (let i = 0; i < genList.length; i++) {
         if (genList[i].type === 'grid') {
           genList[i].columns.forEach(item => {
-            this.generateModle(item.list)
+            this.generateModel(item.list)
           })
         } else {
           if (this.value && Object.keys(this.value).indexOf(genList[i].model) >= 0) {
@@ -143,7 +138,7 @@ export default {
     data: {
       deep: true,
       handler (val) {
-        this.generateModle(val.list)
+        this.generateModel(val.list)
       }
     },
     value: {

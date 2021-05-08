@@ -16,7 +16,7 @@ You can create a form by drag an drop the component from left side to the design
 | clearable | display clearable button. | Boolean | false |  |
 | upload | display upload button. | Boolean | false | |
 | basic-fields | Configure the component on the left, for default it will show all the basic fields. | Array | ['input', 'textarea', 'number', 'radio', 'checkbox', 'time', 'date', 'rate', 'color', 'select', 'switch', 'slider', 'text'] |  |
-| advance-fields | configure the component on the left, for default it will show all the advanced fields | Array | ['blank', 'imgupload', 'editor', 'cascader'] | |
+| advance-fields | configure the component on the left, for default it will show all the advanced fields | Array | ['blank', 'fileupload', 'imgupload', 'editor', 'cascader'] | |
 | layout-fields | configure the layout on the left, for default it will show all the layout | Array | ['grid'] | |
 
 

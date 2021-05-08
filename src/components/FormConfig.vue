@@ -1,6 +1,9 @@
 <template>
   <div class="form-config-container">
     <el-form label-position="top">
+      <el-form-item :label="$t('fm.config.form.name')">
+        <el-input v-model="data.name"></el-input>
+      </el-form-item>
       <el-form-item :label="$t('fm.config.form.labelPosition.title')">
         <el-radio-group v-model="data.labelPosition">
           <el-radio-button label="left">{{$t('fm.config.form.labelPosition.left')}}</el-radio-button>
