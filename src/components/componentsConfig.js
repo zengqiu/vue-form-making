@@ -275,6 +275,7 @@ export const advanceComponents = [
       width: '',
       disabled: false,
       limit: 1,
+      headers: {},
       multiple: false,
       isDelete: false,
       min: 0,

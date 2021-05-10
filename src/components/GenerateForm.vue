@@ -19,14 +19,14 @@
                 <el-form-item v-if="citem.type=='blank'" :label="citem.name" :prop="citem.model" :key="citem.key">
                   <slot :name="citem.model" :model="models"></slot>
                 </el-form-item>
-                <genetate-form-item v-else
+                <generate-form-item v-else
                   :key="citem.key"
                   :models.sync="models"
                   :remote="remote"
                   :rules="rules"
                   :widget="citem"
                   @input-change="onInputChange">
-                </genetate-form-item>
+                </generate-form-item>
               </template>
             </el-col>
           </el-row>

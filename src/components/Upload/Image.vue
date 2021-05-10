@@ -130,10 +130,6 @@ export default {
     }
   },
   mounted () {
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaa')
-    console.log(this.value)
-    console.log(this.fileList)
-
     this.$emit('input', this.fileList)
   },
   methods: {

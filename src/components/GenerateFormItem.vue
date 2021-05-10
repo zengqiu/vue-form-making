@@ -180,6 +180,7 @@
         :height="widget.options.size.height"
         :multiple="widget.options.multiple"
         :limit="widget.options.limit"
+        :headers="widget.options.headers"
         :is-delete="widget.options.isDelete"
         :min="widget.options.min"
         :is-edit="widget.options.isEdit"
