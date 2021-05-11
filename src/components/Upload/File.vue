@@ -14,8 +14,7 @@
       :on-error="handleError"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
-      :on-exceed="handleExceed"
-    >
+      :on-exceed="handleExceed">
       <el-button size="small" type="primary">点击上传</el-button>
       <div slot="tip" class="el-upload__tip">{{ tip }}</div>
     </el-upload>
@@ -60,7 +59,7 @@ export default {
   },
   data () {
     return {
-      fileList: this.value
+      fileList: JSON.parse(JSON.stringify(this.value))
     }
   },
   methods: {
@@ -75,6 +74,7 @@ export default {
         status: file.status,
         url: response.url,
       })
+      this.$emit('input', this.fileList)
     },
     handleError(err, file, fileList) {
       this.$message.error(err.toString())
@@ -84,6 +84,7 @@ export default {
     },
     handleRemove (file, fileList) {
       this.fileList.splice(this.fileList.findIndex(item => item.uid === file.uid), 1)
+      this.$emit('input', this.fileList)
     },
     handleExceed(files, fileList) {
       this.$message.warning(`最多允许上传 ${this.limit} 个文件。`)

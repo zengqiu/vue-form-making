@@ -79,6 +79,10 @@ export default {
       type: Number,
       default: 1
     },
+    headers: {
+      type: Object,
+      default: () => {}
+    },
     isDelete: {
       type: Boolean,
       default: false
@@ -86,10 +90,6 @@ export default {
     min: {
       type: Number,
       default: 0
-    },
-    meitu: {
-      type: Boolean,
-      default: false
     },
     isEdit: {
       type: Boolean,
@@ -117,7 +117,6 @@ export default {
       viewer: null,
       uploadId: 'upload_' + new Date().getTime(),
       editIndex: -1,
-      meituIndex: -1,
     }
   },
   computed: {
@@ -134,7 +133,6 @@ export default {
   },
   methods: {
     handleChange () {
-      console.log(this.$refs.uploadInput.files)
       const files = this.$refs.uploadInput.files
 
       for (let i = 0; i < files.length; i++) {
@@ -170,22 +168,21 @@ export default {
       this.$refs.uploadInput.value = []
     },
     uploadAction (res, file, key) {
-      let changeIndex = this.fileList.findIndex(item => item.key === key)
-      console.log(this.fileList.findIndex(item => item.key === key))
       const xhr = new XMLHttpRequest()
 
       const url = this.action
       xhr.open('POST', url, true)
       // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
+      for (const k of Object.keys(this.headers)) {
+        xhr.setRequestHeader(k, this.headers[k])
+      }
 
       let formData = new FormData()
       formData.append('file', file)
 
       xhr.send(formData)
       xhr.onreadystatechange = () => {
-        console.log(xhr)
         if (xhr.readyState === 4) {
-
           let resData = JSON.parse(xhr.response)
           if (resData && resData.url) {
             this.$set(this.fileList, this.fileList.findIndex(item => item.key === key), {
@@ -210,7 +207,6 @@ export default {
         }
       }
       xhr.onprogress = (res) => {
-        console.log('progress', res)
         if (res.total && res.loaded) {
           this.$set(this.fileList[this.fileList.findIndex(item => item.key === key)], 'percent', res.loaded/res.total*100)
         }
@@ -218,16 +214,11 @@ export default {
     },
     handleRemove (key) {
       this.fileList.splice(this.fileList.findIndex(item => item.key === key), 1)
+      this.$emit('input', this.fileList)
     },
     handleEdit (key) {
-
       this.editIndex = this.fileList.findIndex(item => item.key === key)
-
       this.$refs.uploadInput.click()
-    },
-    handleMeitu (key) {
-
-      this.$emit('on-meitu', this.fileList.findIndex(item => item.key === key))
     },
     handleAdd () {
       if (!this.disabled) {
@@ -239,7 +230,6 @@ export default {
       this.viewer && this.viewer.destroy()
       this.uploadId = 'upload_' + new Date().getTime()
 
-      console.log(this.viewer)
       this.$nextTick(() => {
         this.viewer = new Viewer(document.getElementById(this.uploadId))
         this.viewer.view(this.fileList.findIndex(item => item.key === key))
